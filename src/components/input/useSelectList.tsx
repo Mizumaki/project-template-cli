@@ -24,6 +24,7 @@ export const useSelectList = (): {
 const SelectList = <Item extends ListItem>({
   items,
   onSelect,
+  isActive,
 }: {
   items: Item[];
   onSelect: (selected: { index: number } & Item) => void;
@@ -31,20 +32,23 @@ const SelectList = <Item extends ListItem>({
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  useInput((_, key) => {
-    if (key.upArrow) {
-      setSelectedIndex(i => Math.max(0, i - 1));
-    }
-    if (key.downArrow) {
-      setSelectedIndex(i => Math.min(items.length - 1, i + 1));
-    }
-    if (key.return) {
-      const selectedItem = items[selectedIndex];
-      if (selectedItem) {
-        onSelect({ index: selectedIndex, ...selectedItem });
+  useInput(
+    (_, key) => {
+      if (key.upArrow) {
+        setSelectedIndex(i => Math.max(0, i - 1));
       }
-    }
-  });
+      if (key.downArrow) {
+        setSelectedIndex(i => Math.min(items.length - 1, i + 1));
+      }
+      if (key.return) {
+        const selectedItem = items[selectedIndex];
+        if (selectedItem) {
+          onSelect({ index: selectedIndex, ...selectedItem });
+        }
+      }
+    },
+    { isActive }
+  );
 
   return (
     <Box flexDirection='column'>
@@ -53,7 +57,9 @@ const SelectList = <Item extends ListItem>({
         return (
           <Box key={item.key}>
             <Text color='green'>{isSelected ? '> ' : '  '}</Text>
-            <Text bold={isSelected}>{item.value}</Text>
+            <Text bold={isSelected} underline={isSelected}>
+              {item.value}
+            </Text>
           </Box>
         );
       })}
