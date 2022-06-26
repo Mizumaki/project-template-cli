@@ -4,16 +4,14 @@ import { useTextInput } from './components/input/useTextInput';
 import { mockProjectTemplates } from './mock';
 
 const App = () => {
-  const selectList = useSelectList();
-  const textInput = useTextInput();
-
-  const projectTemplates = mockProjectTemplates;
-  const templateList = projectTemplates.map(t => {
+  const templateList = mockProjectTemplates.map(t => {
     return {
       key: t.name,
       value: t.name,
     };
   });
+  const selectList = useSelectList(templateList);
+  const textInput = useTextInput();
 
   return (
     <>
@@ -22,16 +20,11 @@ const App = () => {
           <Text bold>Select Template</Text>
         </Box>
         {selectList.render({
-          items: templateList,
-          onSelect: ({ index, key, value }) => {
-            // console.log({
-            //   index,
-            //   key,
-            //   value,
-            // });
+          onEnter: () => {
+            // TODO: implement
           },
           // TODO: handle isActive
-          isActive: false,
+          isActive: true,
         })}
       </Box>
       <Box flexDirection='column' paddingX={1}>
@@ -42,9 +35,9 @@ const App = () => {
           <Text bold>Enter Path: </Text>
           {textInput.render({
             // TODO: handle isActive
-            isActive: true,
+            isActive: false,
             onEnter: () => {
-              //
+              // TODO: implement
             },
           })}
         </Box>
@@ -60,7 +53,7 @@ const App = () => {
                 Template:
               </Text>
             </Box>
-            <Text>{textInput.value}</Text>
+            <Text>{selectList.selected.value}</Text>
           </Box>
           <Box flexDirection='row'>
             <Box width={20} justifyContent='flex-end' marginRight={1}>
