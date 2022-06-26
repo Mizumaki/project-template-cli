@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 type Props = {
   steps: ((isActive: boolean, goToNextStep: () => void) => JSX.Element)[];
@@ -21,7 +21,7 @@ export const Steps: React.FC<Props> = ({ steps }) => {
           return null;
         }
         const isActive = currentStepIndex === i;
-        return step(isActive, goToNext);
+        return <React.Fragment key={i}>{step(isActive, goToNext)}</React.Fragment>;
       })}
     </>
   );

@@ -25,14 +25,16 @@ type Props = {
 const TextInput: React.FC<Props> = ({ value, onChange, onEnter, isActive, style }) => {
   useInput(
     (input, key) => {
-      if (input) {
-        onChange(`${value}${input}`);
+      if (key.return) {
+        onEnter(value);
+        return;
       }
       if (key.delete) {
         onChange(value.slice(0, -1));
+        return;
       }
-      if (key.return) {
-        onEnter(value);
+      if (input) {
+        onChange(`${value}${input}`);
       }
     },
     { isActive }

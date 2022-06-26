@@ -70,7 +70,6 @@ const App = () => {
                     Distribution Path:
                   </Text>
                 </Box>
-                {/* TODO: なぜかわからないが、textInput.value が正しく表示されない... 変に文字列に空白が入っているっぽい? */}
                 <Text>{textInput.value}</Text>
               </Box>
             </Box>
