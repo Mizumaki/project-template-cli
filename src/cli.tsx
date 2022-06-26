@@ -1,4 +1,4 @@
-import { render, Text, Box, Newline } from 'ink';
+import { render, Text, Box } from 'ink';
 import { useSelectList } from './components/input/useSelectList';
 import { useTextInput } from './components/input/useTextInput';
 import { mockProjectTemplates } from './mock';
@@ -43,6 +43,9 @@ const App = () => {
           {textInput.render({
             // TODO: handle isActive
             isActive: true,
+            onEnter: () => {
+              //
+            },
           })}
         </Box>
       </Box>
