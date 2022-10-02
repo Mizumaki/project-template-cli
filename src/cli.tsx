@@ -4,12 +4,14 @@ import { useSelectList } from './components/input/useSelectList';
 import { useTextInput } from './components/input/useTextInput';
 import { Steps } from './components/Steps';
 import { mockProjectTemplates } from './mock';
+import { downloadFile } from './utils/downloadFile';
 
 const App = () => {
   const templateList = mockProjectTemplates.map(t => {
     return {
       key: t.name,
       value: t.name,
+      url: t.url,
     };
   });
   const selectList = useSelectList(templateList);
@@ -26,7 +28,6 @@ const App = () => {
             </Box>
             {selectList.render({
               onEnter: () => {
-                // TODO: implement
                 goToNext();
               },
               isActive,
@@ -42,7 +43,7 @@ const App = () => {
               <Text bold>Enter Path: </Text>
               {textInput.render({
                 onEnter: () => {
-                  // TODO: implement
+                  // TODO: Check path validity
                   goToNext();
                 },
                 isActive,
@@ -80,13 +81,22 @@ const App = () => {
               {awaitEnter.render({
                 isActive,
                 onEnter: () => {
-                  // TODO: implement
-                  goToNext();
+                  const url = new URL(selectList.selected.value);
+                  // TODO: use async/await
+                  void downloadFile(url, textInput.value)
+                    .then(() => {
+                      goToNext();
+                    })
+                    .catch((e: string) => {
+                      console.log({ e });
+                    });
                 },
               })}
             </Box>
           </Box>
         ),
+        // TODO: Add Loading page with download, unzip, distribute logics
+        // TODO: Add Complete
       ]}
     />
   );
