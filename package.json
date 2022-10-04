@@ -4,6 +4,9 @@
   "description": "The CLI to start project easily.",
   "main": "dist/cli.js",
   "author": "Ryota Mizumaki",
+  "volta": {
+    "node": "16.17.1"
+  },
   "scripts": {
     "start": "npm run build && concurrently --kill-others-on-fail --names 'babel,server' --prefix-colors 'yellow,green' npm:start:babel",
     "start:babel": "npm run build:babel -- --watch",
