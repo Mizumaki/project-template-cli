@@ -9,9 +9,11 @@ export const downloadFile = (targetFileUrl: URL, distributeFilePath: string) => 
     const protocol = targetFileUrl.protocol;
     if (!supportedProtocol.includes(protocol)) {
       reject(new Error(`${protocol} is not supported on downloadFile util`));
+      return;
     }
     if (path.extname(targetFileUrl.pathname) !== path.extname(distributeFilePath)) {
       reject(new Error(`Path extension is incorrect: ${targetFileUrl.pathname} and ${distributeFilePath}`));
+      return;
     }
 
     const file = fs.createWriteStream(path.resolve(process.cwd(), distributeFilePath));

@@ -1,4 +1,5 @@
 import { render, Text, Box } from 'ink';
+import { useState } from 'react';
 import { useAwaitEnter } from './components/input/useAwaitEnter';
 import { useSelectList } from './components/input/useSelectList';
 import { useTextInput } from './components/input/useTextInput';
@@ -14,11 +15,14 @@ const App = () => {
       url: t.url,
     };
   });
-  const selectList = useSelectList(templateList);
-  const textInput = useTextInput();
+  const projectList = useSelectList(templateList);
+  const distributedPathText = useTextInput();
   const awaitEnter = useAwaitEnter();
 
+  const [error, setError] = useState<{ message: string }>()
+
   return (
+    <>
     <Steps
       steps={[
         (isActive, goToNext) => (
@@ -26,7 +30,7 @@ const App = () => {
             <Box marginY={1} paddingX={1} width={40} borderStyle='round' borderColor='green'>
               <Text bold>Select Template</Text>
             </Box>
-            {selectList.render({
+            {projectList.render({
               onEnter: () => {
                 goToNext();
               },
@@ -41,7 +45,7 @@ const App = () => {
             </Box>
             <Box paddingLeft={2}>
               <Text bold>Enter Path: </Text>
-              {textInput.render({
+              {distributedPathText.render({
                 onEnter: () => {
                   // TODO: Check path validity
                   goToNext();
@@ -51,7 +55,7 @@ const App = () => {
             </Box>
           </Box>
         ),
-        (isActive, goToNext) => (
+        (isActive, goToNext, endSteps) => (
           <Box flexDirection='column' paddingX={1} marginY={1} borderStyle='classic' width={100}>
             <Box justifyContent='center'>
               <Text bold>Summary</Text>
@@ -63,7 +67,7 @@ const App = () => {
                     Template:
                   </Text>
                 </Box>
-                <Text>{selectList.selected.value}</Text>
+                <Text>{projectList.selected.value}</Text>
               </Box>
               <Box flexDirection='row'>
                 <Box width={20} justifyContent='flex-end' marginRight={1}>
@@ -71,7 +75,7 @@ const App = () => {
                     Distribution Path:
                   </Text>
                 </Box>
-                <Text>{textInput.value}</Text>
+                <Text>{distributedPathText.value}</Text>
               </Box>
             </Box>
             <Box justifyContent='center' marginBottom={1}>
@@ -81,14 +85,16 @@ const App = () => {
               {awaitEnter.render({
                 isActive,
                 onEnter: () => {
-                  const url = new URL(selectList.selected.value);
+                  const url = new URL(projectList.selected.url);
                   // TODO: use async/await
-                  void downloadFile(url, textInput.value)
+                  // TODO: zip ファイルを DL して解凍、の２手順が必要. その時、distributedPathText は .zip ではないので何かしらの option を downloadFile に追加する. 例えば、folder 配下に同名で作る option とか
+                  void downloadFile(url, distributedPathText.value)
                     .then(() => {
                       goToNext();
                     })
                     .catch((e: string) => {
-                      console.log({ e });
+                      setError({ message: e.toString() })
+                      endSteps();
                     });
                 },
               })}
@@ -99,6 +105,9 @@ const App = () => {
         // TODO: Add Complete
       ]}
     />
+    {/* TODO: Rich Error UI */}
+    <Text>{error?.message}</Text>
+    </>
   );
 };
 

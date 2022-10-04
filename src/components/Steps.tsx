@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 type Props = {
-  steps: ((isActive: boolean, goToNextStep: () => void) => JSX.Element)[];
+  steps: ((isActive: boolean, goToNextStep: () => void, endSteps: () => void) => JSX.Element)[];
 };
 
 export const Steps: React.FC<Props> = ({ steps }) => {
@@ -13,6 +13,10 @@ export const Steps: React.FC<Props> = ({ steps }) => {
       return newIndex;
     });
   };
+  const [isForceEnd, setIsForceEnd] = useState(false)
+  const endSteps = useCallback(() => {
+    setIsForceEnd(true)
+  }, [])
 
   return (
     <>
@@ -20,8 +24,8 @@ export const Steps: React.FC<Props> = ({ steps }) => {
         if (currentStepIndex < i) {
           return null;
         }
-        const isActive = currentStepIndex === i;
-        return <React.Fragment key={i}>{step(isActive, goToNext)}</React.Fragment>;
+        const isActive = isForceEnd ? false : currentStepIndex === i;
+        return <React.Fragment key={i}>{step(isActive, goToNext, endSteps)}</React.Fragment>;
       })}
     </>
   );
