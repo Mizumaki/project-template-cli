@@ -1,4 +1,4 @@
-import https from 'https';
+import { https } from 'follow-redirects';
 import fs from 'fs';
 import path from 'path';
 
@@ -41,19 +41,20 @@ export const downloadFile = async ({
         return;
       }
 
-      const file = fs.createWriteStream(path.resolve(process.cwd(), distPath));
+      const fileWritableStream = fs.createWriteStream(path.resolve(process.cwd(), distPath));
       https
         .get(targetFileUrl.toString(), res => {
-          res.pipe(file);
-          file.on('finish', () => {
-            file.close();
+          fileWritableStream.on('finish', () => {
+            fileWritableStream.close();
             resolve(distPath);
           });
+          res.pipe(fileWritableStream);
         })
         .on('error', e => {
+          fileWritableStream.close();
           console.error(e);
           console.log('Start deleting the failed downloaded file');
-          fs.stat(distPath, (err, stats) => {
+          fs.stat(distPath, err => {
             if (err) {
               reject(err);
               return;
