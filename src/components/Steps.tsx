@@ -13,10 +13,10 @@ export const Steps: React.FC<Props> = ({ steps }) => {
       return newIndex;
     });
   };
-  const [isForceEnd, setIsForceEnd] = useState(false)
+  const [isForceEnd, setIsForceEnd] = useState(false);
   const endSteps = useCallback(() => {
-    setIsForceEnd(true)
-  }, [])
+    setIsForceEnd(true);
+  }, []);
 
   return (
     <>
