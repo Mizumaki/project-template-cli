@@ -12,6 +12,7 @@
     "start:babel": "npm run build:babel -- --watch",
     "build": "npm run lint:tsc && npm run build:babel",
     "build:babel": "babel ./src --extensions '.ts,.tsx' --out-dir ./dist",
+    "pkg": "pkg ./dist/cli.js -o project-template-cli.bin",
     "lint": "npm run lint:tsc & npm run lint:eslint:write",
     "lint:tsc": "tsc --noEmit",
     "lint:eslint": "eslint './src/**/*.{js,ts,jsx,tsx}'",
@@ -55,6 +56,7 @@
     "husky": "^8.0.1",
     "jest": "^28.1.1",
     "lint-staged": "^13.0.3",
+    "pkg": "^5.8.0",
     "prettier": "^2.7.1",
     "typescript": "^4.7.4"
   }
