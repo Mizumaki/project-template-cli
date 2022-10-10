@@ -4,6 +4,7 @@ import { useAwaitEnter } from './components/input/useAwaitEnter';
 import { useSelectList } from './components/input/useSelectList';
 import { useTextInput } from './components/input/useTextInput';
 import { Steps } from './components/Steps';
+import { downloadAndExtractRepoIntoDirectory } from './logics/downloadAndExtractRepoIntoDirectory';
 import { mockProjectTemplates } from './mock';
 import { downloadFile } from './utils/downloadFile';
 
@@ -86,10 +87,11 @@ const App = () => {
                   isActive,
                   onEnter: () => {
                     const url = new URL(projectList.selected.url);
-                    // TODO: use async/await
-                    downloadFile({ targetFileUrl: url, distributeFilePath: distributedPathText.value })
-                      .then(distPath => {
-                        // TODO: zip ファイルを解凍する必要あり
+                    downloadAndExtractRepoIntoDirectory({
+                      downloadRepoUrl: url,
+                      destDirPath: distributedPathText.value,
+                    })
+                      .then(() => {
                         goToNext();
                       })
                       .catch((e: string) => {
@@ -101,7 +103,7 @@ const App = () => {
               </Box>
             </Box>
           ),
-          // TODO: Add Loading page with download, unzip, distribute logics
+          // TODO: Add Loading page when download
           // TODO: Add Complete
         ]}
       />
